@@ -1,16 +1,16 @@
--- 1. Все товары, в которых в название есть пометка urgent или название начинается с Animal
+-- 1. All products in which the name is marked urgently or the name begins with Animal
 SELECT Purchasing.PurchaseOrderLines.Description AS description
 FROM Purchasing.PurchaseOrderLines
 WHERE Purchasing.PurchaseOrderLines.Description LIKE 'Animal%' OR
 		Purchasing.PurchaseOrderLines.Description LIKE '%urgent%'
 
---2. Поставщиков, у которых не было сделано ни одного заказа
-SELECT Sales.Customers.CustomerID AS [CustID without orders]
-FROM Sales.Customers
-WHERE Sales.Customers.CustomerID NOT IN 
-	(SELECT DISTINCT Sales.CustomerTransactions.CustomerID
-	 FROM Sales.CustomerTransactions)
-ORDER BY [CustID without orders]
+--2. Suppliers who did not have a single order
+SELECT Purchasing.Suppliers.SupplierID AS [Supplier ID without orders]
+FROM Purchasing.Suppliers
+WHERE Purchasing.Suppliers.SupplierID NOT IN 
+	(SELECT DISTINCT Purchasing.SupplierTransactions.SupplierID
+	 FROM Purchasing.SupplierTransactions)
+ORDER BY [Supplier ID without orders]
 
 /*3. Продажи с названием месяца, в котором была продажа, номером квартала, к которому относится продажа, 
 включите также к какой трети года относится дата - каждая треть по 4 месяца, дата забора заказа должна быть задана, 
@@ -25,7 +25,7 @@ ORDER BY [CustID without orders]
 */
 
 
---5. 10 последних по дате продаж с именем клиента и именем сотрудника, который оформил заказ
+--5. 10 latest by date of sales with the name of the customer and the name of the salesperson who placed the order
 WITH Top10OrdersByDateDesc (OrderID, CustomerID, SalespersonID)
 AS
 (
