@@ -23,7 +23,26 @@ ORDER BY [Supplier ID without orders]
 4. «аказы поставщикам, которые были исполнены за 2014й год с доставкой Road Freight или Post, 
 добавьте название поставщика, им€ контактного лица принимавшего заказ
 */
-
+SELECT
+	Application.DeliveryMethods.DeliveryMethodName AS [DeliveryMethod],
+	CustomersWithDiliveryMethod.CustomerName AS [Customer]
+FROM Application.DeliveryMethods JOIN
+	(SELECT
+		Sales.Invoices.DeliveryMethodID,
+		OrdersBy2014YEAR.CustomerName
+	FROM Sales.Invoices JOIN
+		(SELECT
+			Sales.Orders.OrderID,
+			Sales.Orders.CustomerID,
+			Sales.Customers.CustomerName
+		FROM Sales.Orders JOIN
+			Sales.Customers
+						  ON Sales.Customers.CustomerID = Sales.Orders.CustomerID
+		WHERE YEAR(Sales.Orders.OrderDate) = '2014') AS OrdersBy2014YEAR
+						ON OrdersBy2014YEAR.OrderID = Sales.Invoices.OrderID) AS CustomersWithDiliveryMethod
+								ON CustomersWithDiliveryMethod.DeliveryMethodID = Application.DeliveryMethods.DeliveryMethodID
+WHERE Application.DeliveryMethods.DeliveryMethodName = 'Freigth' OR
+		Application.DeliveryMethods.DeliveryMethodName = 'Post'
 
 --5. 10 latest by date of sales with the name of the customer and the name of the salesperson who placed the order
 WITH Top10OrdersByDateDesc (OrderID, CustomerID, SalespersonID)
