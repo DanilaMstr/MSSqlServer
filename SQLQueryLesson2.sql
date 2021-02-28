@@ -27,9 +27,4 @@ ORDER BY [CustID without orders]
 
 --¬се ид и имена клиентов и их контактные телефоны, которые покупали товар Chocolate frogs 250g
 SELECT TOP 10 
-	Sales.CustomerTransactions.TransactionDate AS [last top 10 orders],
-	Sales.Customers.CustomerName AS [Customer Name],
-	Sales.Customers.CustomerID [Customer ID]
-FROM Sales.CustomerTransactions JOIN Sales.Customers
-	ON Sales.CustomerTransactions.CustomerID = Sales.Customers.CustomerID
-ORDER BY [last top 10 orders] DESC
+	Sales.Orders.CustomerID [Customer ID]
