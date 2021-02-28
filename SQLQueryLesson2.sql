@@ -55,4 +55,20 @@ FROM
 	) AS CustomersTop10
 	ON SalespersonTop10.SalespersonOrderID = CustomersTop10.CustomerOrderID
 
---6. ¬се ид и имена клиентов и их контактные телефоны, которые покупали товар Chocolate frogs 250g
+--6. All id and names of customers and their contact numbers who bought the product Chocolate frogs 250g
+SELECT DISTINCT
+	Sales.Customers.CustomerID,
+	Sales.Customers.CustomerName,
+	Sales.Customers.PhoneNumber
+FROM Sales.Customers JOIN
+	(SELECT
+		Sales.Orders.CustomerID AS CustomerID
+	FROM Sales.Orders JOIN 
+		(SELECT 
+			Sales.OrderLines.OrderID
+		FROM Sales.OrderLines
+		WHERE Sales.OrderLines.Description LIKE 'Chocolate frogs 250g') AS OrdersChocolate
+					ON OrdersChocolate.OrderID = Sales.Orders.OrderID
+		) AS CustomersWhoBoughtChocolate
+				ON CustomersWhoBoughtChocolate.CustomerID = Sales.Customers.CustomerID
+ORDER BY Sales.Customers.CustomerID
